@@ -1,5 +1,21 @@
 usuarios = {}
 
+def carregar_usuarios():
+    try:
+        with open("usuarios.txt", "r", encoding="utf-8") as arquivo:
+            for linha in arquivo:
+                linha = linha.strip()
+                if linha:
+                    email, nome, senha = linha.split(";")
+                    usuarios[email] = {"nome": nome, "senha": senha}
+    except FileNotFoundError:
+        pass
+
+def salvar_usuarios():
+    with open("usuarios.txt", "w", encoding="utf-8") as arquivo:
+        for email, dados in usuarios.items():
+            arquivo.write(f"{email};{dados['nome']};{dados['senha']}\n")
+
 def menu_principal():
     print("\nMENU PRINCIPAL")
     print("1 - Cadastrar usuária")
@@ -15,10 +31,11 @@ def cadastrar_usuario():
     senha = input("Senha: ")
 
     if email in usuarios:
-        print(" E-mail já cadastrado!")
+        print("E-mail já cadastrado!")
     else:
         usuarios[email] = {"nome": nome, "senha": senha}
-        print(" Usuária criada com sucesso!")
+        salvar_usuarios()
+        print("Usuária criada com sucesso!")
 
 def login():
     print("\nLOGIN")
@@ -29,7 +46,7 @@ def login():
         print("Login bem-sucedido!")
         painel_usuaria(email)
     else:
-        print("1 E-mail ou senha incorretos.")
+        print("E-mail ou senha incorretos.")
 
 def ver_noticias():
     print("\nNOTÍCIAS")
@@ -40,7 +57,7 @@ def ver_noticias():
 
 def painel_usuaria(email):
     while True:
-        print(f"\nPAINEL DA USUÁRIA ({usuarios[email]['nome']}) ")
+        print(f"\nPAINEL DA USUÁRIA ({usuarios[email]['nome']})")
         print("1 - Ver oportunidades")
         print("2 - Apoio psicopedagógico")
         print("3 - Editar perfil")
@@ -54,36 +71,40 @@ def painel_usuaria(email):
         elif opcao == "3":
             editar_perfil(email)
         elif opcao == "4":
-            print("Sessão encerrada. Retornando ao menu principal...")
+            print("Sessão encerrada. Retornando ao menu principal")
             break
         else:
             print("Opção inválida!")
 
 def ver_oportunidades():
-    print("\n--- OPORTUNIDADES ---")
+    print("\nOPORTUNIDADES")
     print("1. Estágio em Tecnologia - Empresa Tech4Girls")
     print("2. Bolsa de estudos em Programação - Instituto Mulheres Digitais")
     print("3. Mentoria gratuita em Liderança Feminina")
-    input("\nPressione ENTER para sair...")
+    input("\nPressione ENTER para sair")
 
 def apoio_psicopedagogico():
-    print("\n--- APOIO PSICOPEDAGÓGICO ---")
+    print("\nAPOIO PSICOPEDAGÓGICO")
     print("Esta é uma simulação de contato.")
     print("Mensagem: 'Estamos aqui para te apoiar! Envie um e-mail para apoio@conectagirl.org'")
-    input("\nPressione ENTER para sair...")
+    input("\nPressione ENTER para sair")
 
 def editar_perfil(email):
-    print("\n--- EDITAR PERFIL ---")
+    print("\nEDITAR PERFIL")
     novo_nome = input(f"Novo nome ({usuarios[email]['nome']}): ") or usuarios[email]['nome']
     nova_senha = input("Nova senha (deixe em branco para manter): ") or usuarios[email]['senha']
 
     usuarios[email]['nome'] = novo_nome
     usuarios[email]['senha'] = nova_senha
 
+    salvar_usuarios()
+
     print("Dados alterados com sucesso!")
 
 def iniciar_sistema():
+    carregar_usuarios()
     print("BEM-VINDA AO CONECTA GIRL")
+
     while True:
         opcao = menu_principal()
 
@@ -94,6 +115,6 @@ def iniciar_sistema():
         elif opcao == "3":
             ver_noticias()
         else:
-            print(" Opção inválida!")
+            print("Opção inválida!")
 
-iniciar_sistema()
+iniciar_sistema()7
