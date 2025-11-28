@@ -117,4 +117,4 @@ def iniciar_sistema():
         else:
             print("Opção inválida!")
 
-iniciar_sistema()7
+iniciar_sistema()
